@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Workshop of Abbé Faria — The Count of Monte Cristo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone-black:#0b0906;
+    --cell-wall:#1c1712;
+    --cell-wall-2:#241d16;
+    --iron:#4a3c2c;
+    --iron-dim:#2e2519;
+    --candle:#d9a441;
+    --candle-bright:#f0c26a;
+    --candle-dim:#8a651f;
+    --parchment:#e9dcc2;
+    --parchment-dim:#a89876;
+    --wax:#7a2e22;
+    --wax-bright:#a5432f;
+    --shadow:#000000;
+    --max:740px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--stone-black);
+    color:var(--parchment);
+    font-family:'EB Garamond', serif;
+    font-size:19px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--candle-dim); color:var(--stone-black); }
+
+  /* ambient texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(217,164,65,0.10), transparent 55%),
+      radial-gradient(ellipse at 50% 110%, rgba(0,0,0,0.6), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  body::after{
+    content:"";
+    position:fixed; inset:0;
+    opacity:.05;
+    pointer-events:none;
+    z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  a{ color:var(--candle); }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+  }
+
+  .wrap{ max-width:var(--max); margin:0 auto; padding:0 28px; position:relative; z-index:1; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:96vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:100px 24px 60px;
+    position:relative;
+  }
+  .flame{
+    width:6px; height:26px;
+    margin:0 auto 26px;
+    background:linear-gradient(to top, var(--candle-dim), var(--candle-bright) 70%, #fff6da);
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+    filter:blur(.2px);
+    box-shadow:0 0 18px 6px rgba(240,194,106,.55), 0 0 60px 20px rgba(217,164,65,.15);
+    animation:flicker 3.2s ease-in-out infinite;
+    transform-origin:bottom center;
+  }
+  @keyframes flicker{
+    0%,100%{ transform:scaleY(1) scaleX(1) rotate(0deg); opacity:1; }
+    20%{ transform:scaleY(1.08) scaleX(.94) rotate(-1.5deg); opacity:.92; }
+    45%{ transform:scaleY(.92) scaleX(1.05) rotate(1.5deg); opacity:1; }
+    70%{ transform:scaleY(1.05) scaleX(.97) rotate(-1deg); opacity:.95; }
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--candle);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 6vw, 3.6rem);
+    line-height:1.12;
+    color:var(--parchment);
+    max-width:12ch;
+    margin:0 auto;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--candle-bright);
+  }
+  .hero-sub{
+    margin-top:26px;
+    font-size:1.15rem;
+    color:var(--parchment-dim);
+    max-width:46ch;
+    font-style:italic;
+  }
+  .hero-note{
+    margin-top:44px;
+    padding-top:28px;
+    border-top:1px solid var(--iron);
+    max-width:52ch;
+    font-size:1rem;
+    color:var(--parchment-dim);
+    text-align:left;
+  }
+  .hero-note strong{ color:var(--parchment); font-weight:600; }
+
+  .scroll-cue{
+    margin-top:56px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--iron);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  .scroll-cue svg{ width:14px; height:20px; }
+  @keyframes pulse{ 0%,100%{opacity:.35;} 50%{opacity:.85;} }
+
+  /* ---------- SETTING ---------- */
+  .setting{
+    padding:80px 0 40px;
+    position:relative; z-index:1;
+  }
+  .setting .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--candle-dim);
+    margin-bottom:14px;
+  }
+  .setting h2{
+    font-size:1.7rem;
+    color:var(--parchment);
+    margin-bottom:20px;
+  }
+  .setting p{ color:var(--parchment-dim); font-size:1.05rem; }
+  .setting .divider{
+    margin:56px 0 0;
+    height:1px;
+    background:linear-gradient(to right, transparent, var(--iron), transparent);
+  }
+
+  /* ---------- EXHIBIT ---------- */
+  .exhibit{
+    padding:74px 0;
+    border-top:1px solid var(--iron-dim);
+    position:relative;
+    z-index:1;
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .exhibit.in{ opacity:1; transform:translateY(0); }
+
+  .exhibit-numeral{
+    font-family:'Fraunces', serif;
+    font-size:13vw;
+    max-font-size:120px;
+    line-height:1;
+    color:transparent;
+    -webkit-text-stroke:1px var(--iron);
+    position:absolute;
+    top:60px; right:-6px;
+    z-index:-1;
+    user-select:none;
+    pointer-events:none;
+  }
+
+  .exhibit-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--candle-dim);
+    margin-bottom:14px;
+  }
+  .exhibit h3{
+    font-size:clamp(1.5rem, 4vw, 2rem);
+    color:var(--parchment);
+    margin-bottom:28px;
+    max-width:18ch;
+  }
+
+  .plate{
+    width:100%;
+    max-width:300px;
+    margin:0 auto 34px;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    position:relative;
+    box-shadow:
+      0 0 0 1px var(--iron),
+      0 0 0 7px var(--stone-black),
+      0 0 0 8px var(--iron-dim),
+      inset 0 0 40px 8px rgba(0,0,0,.7),
+      0 18px 40px -12px rgba(0,0,0,.8);
+    overflow:hidden;
+    background:radial-gradient(circle at 50% 46%, #3a2c1c 0%, #211a12 42%, #120e09 78%, #0a0806 100%);
+  }
+  .plate svg{ width:100%; height:100%; display:block; }
+
+  .exhibit-body{ max-width:56ch; }
+  .exhibit-body p{ margin:0 0 16px; color:var(--parchment); }
+  .exhibit-body .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--parchment-dim);
+    margin-bottom:8px;
+  }
+
+  .reflection{
+    margin-top:26px;
+    padding-left:20px;
+    border-left:2px solid var(--wax-bright);
+    font-style:italic;
+    color:var(--candle-bright);
+    font-size:1.02rem;
+  }
+  .reflection .label{
+    font-family:'JetBrains Mono', monospace;
+    font-style:normal;
+    font-size:10.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--wax-bright);
+    margin-bottom:6px;
+    display:block;
+  }
+
+  /* final exhibit gets extra weight */
+  .exhibit.finale{
+    background:radial-gradient(ellipse at 50% 0%, rgba(217,164,65,.06), transparent 60%);
+  }
+  .exhibit.finale .plate{ max-width:340px; }
+
+  /* ---------- CLOSING ---------- */
+  .closing{
+    padding:90px 0 40px;
+    border-top:1px solid var(--iron-dim);
+    position:relative; z-index:1;
+  }
+  .closing .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--candle-dim);
+    margin-bottom:14px;
+  }
+  .closing h2{
+    font-size:clamp(1.6rem, 4.5vw, 2.2rem);
+    color:var(--parchment);
+    margin-bottom:26px;
+    max-width:20ch;
+  }
+  .closing p{ color:var(--parchment); font-size:1.08rem; }
+  .closing p + p{ margin-top:16px; }
+  .closing .source{
+    margin-top:36px;
+    color:var(--parchment-dim);
+    font-size:.95rem;
+  }
+
+  footer{
+    padding:50px 0 70px;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--iron);
+    position:relative; z-index:1;
+  }
+  footer .flame{ transform:scale(.7); margin-bottom:18px; }
+
+  @media (max-width:560px){
+    body{ font-size:17.5px; }
+    .wrap{ padding:0 20px; }
+    .hero{ padding-top:70px; }
+    .exhibit{ padding:54px 0; }
+    .exhibit-numeral{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="position:fixed; top:20px; left:20px; z-index:10; font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--parchment-dim); text-decoration:none; border:1px solid var(--iron); padding:8px 14px; border-radius:999px; background:rgba(11,9,6,.6); backdrop-filter:blur(6px);">← back to CV</a>
+
+<header class="hero">
+  <div class="flame"></div>
+  <div class="eyebrow">The Count of Monte Cristo · Chapters XVI–XVII</div>
+  <h1>The Workshop of <em>Abbé Faria</em></h1>
+  <p class="hero-sub">What a mind can still build when everything else has been taken away.</p>
+
+  <div class="hero-note wrap" style="max-width:52ch; padding-left:0; padding-right:0;">
+    <p><strong>Why this page exists.</strong> This is my favorite part of Dumas's novel — not the revenge, not the treasure, but the fourteen years a prisoner named Faria spent turning an empty stone cell into a working laboratory. No equipment, no books, no freedom. He kept doing science anyway. Below is a small catalog of everything he built, in the order Dantès discovers it.</p>
+  </div>
+
+  <div class="scroll-cue">
+    <span>descend into cell no. 27</span>
+    <svg viewBox="0 0 14 20" fill="none"><path d="M7 1v16M2 12l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="setting">
+    <div class="kicker">Château d'If, off the coast of Marseille</div>
+    <h2>A tunnel meets the wrong cell</h2>
+    <p>For years, a young sailor named Edmond Dantès has been imprisoned without trial. One night, the wall of his cell gives way — not to a rescuer, but to an old man who has spent over a decade digging in the wrong direction. He introduces himself simply as "Abbé Faria." He expected to find freedom. He found another prisoner instead.</p>
+    <p>What follows is not a story about escape. It's an inventory of everything one exhausted, brilliant man built in the dark, with his hands, out of nothing.</p>
+    <div class="divider"></div>
+  </section>
+
+  <!-- EXHIBIT I — TUNNEL -->
+  <section class="exhibit" id="ex-1">
+    <div class="exhibit-numeral">I</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit I — Engineering, undertaken without instruments</div>
+      <h3>The Fifty-Foot Tunnel</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f0c26a"/>
+              <stop offset="1" stop-color="#8a651f"/>
+            </linearGradient>
+          </defs>
+          <g stroke="url(#g1)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M70 60 L110 95 L95 130 L140 160 L128 195 L175 225 L165 245"/>
+            <path d="M78 52 L118 87 L103 122 L148 152 L136 187 L183 217 L173 238" opacity=".45"/>
+          </g>
+          <g stroke="#d9a441" stroke-width="1" opacity=".55">
+            <path d="M110 95 l14 -6"/><path d="M95 130 l14 -6"/><path d="M140 160 l14 -6"/>
+            <path d="M128 195 l14 -6"/><path d="M175 225 l14 -6"/>
+          </g>
+          <circle cx="70" cy="60" r="5" fill="#f0c26a"/>
+          <g transform="translate(150,238) rotate(35)">
+            <rect x="-2" y="-24" width="4" height="30" rx="2" fill="#e9dcc2"/>
+            <path d="M-14 -24 Q0 -40 14 -24 Q0 -30 -14 -24Z" fill="#d9a441"/>
+          </g>
+          <text x="205" y="235" font-family="JetBrains Mono, monospace" font-size="11" fill="#a89876">50 FT</text>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>For years, Faria cut through solid rock with a homemade chisel, aiming for the outer wall of the fortress. He had no compass and no drafting tools, so he judged the distance and the angle by instinct alone. He was off by ten feet. The tunnel broke through into the wrong cell — Dantès's, not the outer wall he meant to reach.</p>
+        <div class="reflection">
+          <span class="label">A note on the error</span>
+          Real research fails exactly like this. You calculate, you dig for years, and you surface ten feet from where you meant to be. Faria didn't call it wasted work. He treated the miscalculation as new information and kept moving.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT II — TOOLKIT -->
+  <section class="exhibit" id="ex-2">
+    <div class="exhibit-numeral">II</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit II — Metalwork, no forge</div>
+      <h3>A Toolkit Made From a Bed</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#d9a441" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- chisel -->
+            <path d="M90 210 L150 150"/>
+            <path d="M148 148 L166 130 L172 136 L154 154Z" fill="#e9dcc2" stroke="none"/>
+            <rect x="82" y="202" width="20" height="9" rx="3" transform="rotate(45 92 206)" fill="#8a651f" stroke="none"/>
+            <!-- tongs -->
+            <path d="M170 210 L150 175 M210 210 L190 175"/>
+            <path d="M150 175 Q180 155 190 175"/>
+            <!-- lever -->
+            <path d="M100 95 L220 95" stroke-width="3"/>
+            <circle cx="220" cy="95" r="4" fill="#e9dcc2" stroke="none"/>
+          </g>
+          <text x="150" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a89876" letter-spacing="2">CHISEL · TONGS · LEVER</text>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>Faria owned nothing resembling a tool. So he pried the iron clamp from his own bed frame and, without a forge or a workshop, shaped it into a chisel with a beechwood handle, a pair of tongs, and a lever. Every invention that came after this one started with this single piece of scavenged iron.</p>
+        <div class="reflection">
+          <span class="label">A note on the equipment</span>
+          No lab, no budget line, no supply order — and he still built the equipment. The tool always comes after the will to build it, not before.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT III — SUNDIAL -->
+  <section class="exhibit" id="ex-3">
+    <div class="exhibit-numeral">III</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit III — Astronomy, tracked on stone</div>
+      <h3>A Clock Made of Sunlight</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <rect x="40" y="40" width="20" height="80" fill="#241d16" stroke="#4a3c2c" stroke-width="1.5"/>
+          <g stroke="#f0c26a" stroke-width="1.6" opacity=".9">
+            <line x1="60" y1="60" x2="230" y2="90"/>
+            <line x1="60" y1="72" x2="220" y2="130"/>
+            <line x1="60" y1="84" x2="205" y2="168"/>
+            <line x1="60" y1="96" x2="188" y2="200"/>
+          </g>
+          <g stroke="#d9a441" stroke-width="2" fill="none">
+            <line x1="230" y1="90" x2="230" y2="102"/>
+            <line x1="220" y1="130" x2="220" y2="142"/>
+            <line x1="205" y1="168" x2="205" y2="180"/>
+            <line x1="188" y1="200" x2="188" y2="212"/>
+          </g>
+          <circle cx="255" cy="55" r="14" fill="none" stroke="#f0c26a" stroke-width="2"/>
+          <g stroke="#f0c26a" stroke-width="1.6">
+            <line x1="255" y1="34" x2="255" y2="26"/>
+            <line x1="255" y1="76" x2="255" y2="84"/>
+            <line x1="234" y1="55" x2="226" y2="55"/>
+            <line x1="238" y1="38" x2="232" y2="32"/>
+            <line x1="238" y1="72" x2="232" y2="78"/>
+          </g>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>With no clock and no calendar, Faria followed a single beam of sunlight that reached his window each day, marking its path on the stone wall. By reading where the light fell, he could tell the hour more precisely than a mechanical watch — because, as he put it, a watch can break, but the sun and the earth never stop working.</p>
+        <div class="reflection">
+          <span class="label">A note on the method</span>
+          This is astronomy done with nothing but patience and a wall. No instrument required — just the discipline to actually look, every day, for years.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT IV — PAPER -->
+  <section class="exhibit" id="ex-4">
+    <div class="exhibit-numeral">IV</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit IV — Chemistry, applied to linen</div>
+      <h3>Paper From a Shirt</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#d9a441" stroke-width="2" fill="none" stroke-linejoin="round">
+            <path d="M100 90 L200 90 L200 230 L100 230 Z" opacity=".25"/>
+            <path d="M90 100 Q150 108 210 100" stroke-dasharray="2 6"/>
+            <path d="M90 130 Q150 138 210 130" stroke-dasharray="2 6"/>
+            <path d="M90 160 Q150 168 210 160" stroke-dasharray="2 6"/>
+            <path d="M90 190 Q150 198 210 190" stroke-dasharray="2 6"/>
+          </g>
+          <rect x="100" y="90" width="100" height="140" rx="4" fill="none" stroke="#f0c26a" stroke-width="2.4"/>
+          <path d="M100 90 Q150 82 200 90" fill="none" stroke="#f0c26a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>Faria had studied under real chemists before his arrest. With no lab in his cell, he still found a way to treat plain linen cloth until it turned smooth and firm enough to write on, almost like parchment. His entire manuscript, chapters written from memory, exists on two shirts prepared this way.</p>
+        <div class="reflection">
+          <span class="label">A note on the material</span>
+          Chemistry, to him, wasn't a subject he used to know — it was still something he could do, using the shirt on his own back.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT V — INK -->
+  <section class="exhibit" id="ex-5">
+    <div class="exhibit-numeral">V</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit V — Chemistry, from a sealed chimney</div>
+      <h3>Ink From Soot and Wine</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <ellipse cx="150" cy="200" rx="55" ry="18" fill="#120e09" stroke="#4a3c2c" stroke-width="1.5"/>
+          <path d="M95 200 Q95 90 150 70 Q205 90 205 200" fill="none" stroke="#4a3c2c" stroke-width="3"/>
+          <ellipse cx="150" cy="150" rx="34" ry="12" fill="#0e0b07" opacity=".9"/>
+          <ellipse cx="150" cy="150" rx="34" ry="12" fill="none" stroke="#8a651f" stroke-width="1.4"/>
+          <path d="M140 100 q4 -14 12 -18 q-6 10 0 20" fill="none" stroke="#6a5030" stroke-width="1.6" opacity=".7"/>
+          <path d="M158 96 q6 -10 14 -12 q-8 8 -2 18" fill="none" stroke="#6a5030" stroke-width="1.6" opacity=".7"/>
+          <circle cx="150" cy="150" r="3" fill="#d9a441"/>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>His cell had once had a fireplace, sealed long before he arrived, but the soot on its walls remained. Faria scraped it loose and dissolved it in the wine he was allotted on Sundays, producing usable ink. For lines that needed to stand out, he used his own blood instead.</p>
+        <div class="reflection">
+          <span class="label">A note on the source</span>
+          He read the room, literally — and saw raw material where a jailer only saw a bricked-up chimney.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT VI — QUILLS -->
+  <section class="exhibit" id="ex-6">
+    <div class="exhibit-numeral">VI</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit VI — Materials, sourced from dinner</div>
+      <h3>Pens Made From Fish Bones</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#d9a441" stroke-width="2.2" fill="none" stroke-linecap="round">
+            <path d="M90 220 L200 100"/>
+            <path d="M200 100 L215 82 Q220 76 214 74 Q206 74 198 84 L188 100Z" fill="#e9dcc2" stroke="none"/>
+            <path d="M198 108 L215 90" stroke-width="1.4" opacity=".7"/>
+          </g>
+          <g stroke="#8a651f" stroke-width="1.6" fill="none" opacity=".8">
+            <path d="M110 205 Q90 190 100 165"/>
+            <path d="M108 200 Q95 188 100 175"/>
+          </g>
+          <text x="150" y="255" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a89876" letter-spacing="1.5">MERLAN CARTILAGE</text>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>On fasting days, the prison kitchen served whiting fish. Faria kept the cartilage from the fish heads, cut and split it the way a scribe would split a goose quill, and used it to write. He admitted he had come to look forward to those meatless days — they meant a fresh supply of pens.</p>
+        <div class="reflection">
+          <span class="label">A note on the supply chain</span>
+          He found a source of materials in the prison's own menu. That's not luck — that's reading every part of your environment as a resource.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT VII — BLADES -->
+  <section class="exhibit" id="ex-7">
+    <div class="exhibit-numeral">VII</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit VII — Metalwork, from a candlestick</div>
+      <h3>Blades From a Candlestick</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#d9a441" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M90 100 L190 200"/>
+            <path d="M96 94 L60 58" stroke-width="3"/>
+            <path d="M100 190 L220 240"/>
+            <path d="M226 244 L214 232" stroke-width="3"/>
+          </g>
+          <path d="M60 52 L96 88 L88 96 L52 60Z" fill="#e9dcc2"/>
+          <path d="M182 190 L228 238 L218 248 L172 200Z" fill="#e9dcc2"/>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>From an old iron candlestick, Faria forged a small penknife sharp enough to trim a quill, and a longer knife that could serve as a blade if it ever came to that. Same principle as the chisel: everything ordinary in his cell doubled as raw material.</p>
+        <div class="reflection">
+          <span class="label">A note on the habit</span>
+          He never stopped seeing objects for what they could become, not just what they were labelled.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT VIII — LIGHT & FIRE -->
+  <section class="exhibit" id="ex-8">
+    <div class="exhibit-numeral">VIII</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit VIII — Physics &amp; chemistry, after dark</div>
+      <h3>Light in a Cell With No Lamp</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <ellipse cx="150" cy="215" rx="46" ry="14" fill="#241d16" stroke="#4a3c2c" stroke-width="1.5"/>
+          <path d="M112 215 Q112 175 150 175 Q188 175 188 215" fill="#1c1712" stroke="#4a3c2c" stroke-width="2"/>
+          <path d="M150 175 L150 150" stroke="#e9dcc2" stroke-width="2"/>
+          <path d="M150 150 Q142 130 150 108 Q158 130 150 150" fill="url(#flameGrad)"/>
+          <defs>
+            <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0" stop-color="#8a651f"/>
+              <stop offset=".6" stop-color="#f0c26a"/>
+              <stop offset="1" stop-color="#fff6da"/>
+            </linearGradient>
+          </defs>
+          <g stroke="#d9a441" stroke-width="1.8" opacity=".85">
+            <line x1="70" y1="120" x2="90" y2="132"/>
+            <line x1="70" y1="120" x2="76" y2="142"/>
+          </g>
+          <circle cx="70" cy="112" r="8" fill="none" stroke="#a89876" stroke-width="1.6"/>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>To work after dark, Faria rendered the fat trimmed from his meat rations into oil and burned it in a small clay lamp. For fire, he kept flint and a scrap of cloth as tinder. For matches, he told his jailers he had a skin condition and needed sulfur — they believed him, and gave it to him.</p>
+        <div class="reflection">
+          <span class="label">A note on the workaround</span>
+          He rebuilt lighting and fire-starting from first principles, then talked his way past the one ingredient he genuinely could not make himself.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT IX — ROPE LADDER -->
+  <section class="exhibit" id="ex-9">
+    <div class="exhibit-numeral">IX</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit IX — Engineering, three years in the making</div>
+      <h3>Thirty Feet of Rope, Hidden in a Wall</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#d9a441" stroke-width="2.4" fill="none">
+            <line x1="110" y1="55" x2="110" y2="245"/>
+            <line x1="190" y1="55" x2="190" y2="245"/>
+          </g>
+          <g stroke="#a5852f" stroke-width="2.2">
+            <line x1="110" y1="80" x2="190" y2="80"/>
+            <line x1="110" y1="112" x2="190" y2="112"/>
+            <line x1="110" y1="144" x2="190" y2="144"/>
+            <line x1="110" y1="176" x2="190" y2="176"/>
+            <line x1="110" y1="208" x2="190" y2="208"/>
+          </g>
+          <path d="M100 45 Q150 30 200 45" fill="none" stroke="#e9dcc2" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>Over three years, Faria unraveled his shirts and bedsheets, twisted the threads into rope, and wove a ladder strong enough to hold a grown man's full weight, sewn together with a needle he'd carved from a fishbone. It sat hidden behind a loose stone for years, ready, waiting for a chance that never arrived the way he'd planned.</p>
+        <div class="reflection">
+          <span class="label">A note on the wait</span>
+          He finished a serious piece of engineering he might never get to use, purely on the chance it would matter one day. That's what long research looks like from the inside.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBIT X — TREATISE (finale) -->
+  <section class="exhibit finale" id="ex-10">
+    <div class="exhibit-numeral">X</div>
+    <div class="wrap" style="padding:0;">
+      <div class="exhibit-tag">Exhibit X — The manuscript, sixty-eight strips of linen</div>
+      <h3>A Life's Work on Two Shirts</h3>
+      <div class="plate">
+        <svg viewBox="0 0 300 300">
+          <g stroke="#f0c26a" stroke-width="2" fill="none">
+            <rect x="80" y="70" width="140" height="18" rx="9"/>
+            <rect x="80" y="100" width="140" height="18" rx="9"/>
+            <rect x="80" y="130" width="140" height="18" rx="9"/>
+            <rect x="80" y="160" width="140" height="18" rx="9"/>
+          </g>
+          <g stroke="#8a651f" stroke-width="1.2" opacity=".8">
+            <line x1="92" y1="79" x2="200" y2="79"/>
+            <line x1="92" y1="109" x2="196" y2="109"/>
+            <line x1="92" y1="139" x2="204" y2="139"/>
+            <line x1="92" y1="169" x2="198" y2="169"/>
+          </g>
+          <path d="M80 200 Q150 214 220 200" stroke="#d9a441" stroke-width="2" fill="none"/>
+          <text x="150" y="235" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a89876" letter-spacing="1.5">68 ROLLED STRIPS</text>
+        </svg>
+      </div>
+      <div class="exhibit-body">
+        <p>The tunnel was never Faria's real project. That was a book — a treatise on the possibility of a unified Italian monarchy, an idea he'd carried since before his arrest. He wrote the whole thing from memory, with no reference book in reach, across sixty-eight rolled strips of treated linen. He called it the work of his entire life.</p>
+        <div class="reflection">
+          <span class="label">A note on the purpose</span>
+          Certain he might die in that cell, he still wrote something meant to outlive him. That's the whole premise of research — work built for a reader who isn't in the room yet.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="kicker">Closing note</div>
+    <h2>Why this page exists</h2>
+    <p>What stays with me about Abbé Faria isn't the plan to escape — it's everything he built while he waited for it. Locked in a cell with nothing, he kept doing science anyway: measuring, testing, failing, recalculating, and writing it all down for a reader who might never exist.</p>
+    <p>He's fictional. The instinct he represents isn't. It's the refusal to let bad conditions become a reason to stop being curious. I think about this list of ten objects whenever an experiment doesn't work, or the resources aren't there, or the timeline runs longer than planned. Faria didn't have a lab. He had a stone room and about a decade. He built one anyway.</p>
+    <p class="source">You can read the original scene in Alexandre Dumas's <em>The Count of Monte Cristo</em>, chapters XVI–XVII, "The Italian Scholar" and "The Abbé's Cell."</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="flame"></div>
+  <div>ILLUSTRATIONS ARE ORIGINAL INTERPRETATIONS, NOT REPRODUCTIONS · MADE WITH CLAUDE</div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.exhibit');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
