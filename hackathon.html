@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building SteppeMind — Kuanysh Sarkytbayev</title>
+<meta name="description" content="A technical build log from HackAlem AI, the record-setting Astana hackathon: going from a vague business-task problem to a scoped, shippable MVP in five hours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1226;
+    --bg-panel:#161c3a;
+    --bg-panel-2:#1d2550;
+    --line: rgba(244,241,232,0.10);
+    --ink:#f4f1e8;
+    --muted:#9aa3c7;
+    --muted-2:#6f79a3;
+    --a:#34d399;
+    --t:#fb7185;
+    --g:#fbbf24;
+    --c:#60a5fa;
+    --maxw: 760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--g); color:#12172b; }
+  a{ color:var(--c); }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; letter-spacing:-0.01em; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,18,38,0.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .nav-path{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted-2); text-decoration:none; }
+  .nav-path .seg{ color:var(--t); }
+  .nav-back{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--muted); text-decoration:none; }
+  .nav-back:hover{ color:var(--ink); }
+
+  .hero{ padding:60px 0 10px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px;
+    color:var(--t);
+    background:rgba(251,113,133,0.08);
+    border:1px solid rgba(251,113,133,0.28);
+    padding:5px 10px; border-radius:999px; margin-bottom:24px;
+  }
+  .hero h1{ font-size:clamp(2rem, 6vw, 2.9rem); line-height:1.1; }
+  .hero .dek{ margin-top:16px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; color:var(--muted); }
+  .hero .lede{ margin-top:22px; color:var(--ink); font-size:1.04rem; max-width:60ch; }
+
+  .status-row{
+    margin-top:22px; display:flex; flex-wrap:wrap; gap:10px;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    color:var(--ink); background:var(--bg-panel); border:1px solid var(--line);
+    padding:8px 13px; border-radius:999px; text-decoration:none;
+  }
+  .pill .dot{ width:7px; height:7px; border-radius:50%; background:var(--g); flex-shrink:0; }
+
+  section{ padding:48px 0; border-top:1px solid var(--line); }
+  section:first-of-type{ border-top:none; }
+  .kicker{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--t); margin-bottom:16px;
+  }
+  section h2{ font-size:clamp(1.35rem, 4vw, 1.75rem); margin-bottom:18px; max-width:22ch; }
+  section p{ margin:0 0 16px; color:var(--ink); }
+  section p.small{ color:var(--muted); font-size:.93rem; }
+  em{ color:var(--muted); font-style:italic; }
+
+  .feature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  @media (max-width:600px){ .feature-grid{ grid-template-columns:1fr; } }
+  .stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:8px; }
+  @media (max-width:640px){ .stat-grid{ grid-template-columns:1fr 1fr; } }
+  .feature{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 18px;
+  }
+  .feature .n{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--t); margin-bottom:8px; letter-spacing:.06em; }
+  .feature h3{ font-size:1.02rem; color:var(--ink); margin-bottom:6px; }
+  .feature p{ margin:0; color:var(--muted); font-size:.9rem; }
+
+  .stack-row{ display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 24px; }
+  .chip{
+    font-size:.85rem; padding:6px 12px; border-radius:999px;
+    border:1px solid rgba(251,113,133,0.3); color:var(--ink); background:var(--bg-panel);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  .rating-figure{
+    margin:24px 0; background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:14px; padding:22px 20px 18px;
+  }
+  .rating-bar{ height:10px; border-radius:99px; background:var(--bg-panel-2); overflow:hidden; border:1px solid var(--line); margin:14px 0 10px; }
+  .rating-fill{ height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg, var(--t), var(--g)); transition:width 1.4s ease; }
+  .rating-labels{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted-2); }
+  .rating-note{ margin-top:12px; font-size:.88rem; color:var(--muted); }
+
+  .constraint-list{ margin:10px 0 0; padding-left:0; list-style:none; }
+  .constraint-list li{
+    display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--line);
+    font-size:.95rem; color:var(--ink);
+  }
+  .constraint-list li:last-child{ border-bottom:none; }
+  .constraint-list .ic{ color:var(--g); font-family:'IBM Plex Mono', monospace; flex-shrink:0; }
+
+  .pull{
+    margin:30px 0; padding-left:20px; border-left:2px solid var(--t);
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size:1.1rem;
+    color:var(--t); line-height:1.5;
+  }
+
+  footer{ padding:44px 0 60px; text-align:center; color:var(--muted-2); font-family:'IBM Plex Mono', monospace; font-size:12px; }
+  footer a{ color:var(--muted); text-decoration:none; }
+
+  @media (max-width:560px){ body{ font-size:17.5px; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-path">~/<span class="seg">kuanysh_sarkytbayev</span>/projects</a>
+    <a href="projects.html" class="nav-back">← projects</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">HackAlem AI · Astana, 23 Sep 2026</div>
+    <h1>Building SteppeMind in Five Hours</h1>
+    <div class="dek">Team SteppeMind — a technical build log on what we built, and the decisions that made it shippable in time.</div>
+    <p class="lede">HackAlem AI billed itself as the world's largest agentic-AI hackathon — over 2,500 people on-site in Astana, from 21 countries and 129 universities, run as an official Guinness World Records attempt, with OpenAI, NVIDIA, and Arizona State University as technology partners. The whole build happened inside a single five-hour sprint: teams were disqualified if they were away from their workstation for more than 60 minutes total. We went in as Team SteppeMind, working a case brief our own project docs refer to as "AI Sana" — and shipped a product under the same name, turning a vague business-task problem into a scoped MVP before the clock ran out.</p>
+
+    <div class="status-row">
+      <a class="pill" href="https://github.com/BAITC-Hacks/hack-827386af-steppemind" target="_blank" rel="noopener"><span class="dot" style="background:var(--c);"></span>github — BAITC-Hacks/steppemind</a>
+      <a class="pill" href="https://hackalem.ai/" target="_blank" rel="noopener"><span class="dot" style="background:var(--a);"></span>hackalem.ai</a>
+      <span class="pill" style="cursor:default;"><span class="dot" style="background:var(--g);"></span>outcome: pending</span>
+    </div>
+  </header>
+
+  <section id="scale" style="padding-top:36px;">
+    <div class="stat-grid">
+      <div class="feature"><div class="n">SCALE</div><h3 style="font-size:1.4rem;">2,500+</h3><p>on-site participants in Astana</p></div>
+      <div class="feature"><div class="n">REACH</div><h3 style="font-size:1.4rem;">21 / 129</h3><p>countries / universities represented</p></div>
+      <div class="feature"><div class="n">CLOCK</div><h3 style="font-size:1.4rem;">5 hrs</h3><p>build time, max 60 min away from your desk</p></div>
+      <div class="feature"><div class="n">RECORD</div><h3 style="font-size:1.4rem;">GWR bid</h3><p>official Guinness World Records attempt</p></div>
+    </div>
+    <p class="small" style="margin-top:14px;">Figures from <a href="https://hackalem.ai/" target="_blank" rel="noopener">hackalem.ai</a> and <a href="https://astanatimes.com/?p=120358" target="_blank" rel="noopener">The Astana Times</a> coverage of the event.</p>
+  </section>
+
+  <section id="case">
+    <div class="kicker">01 — The Case</div>
+    <h2>Good problems, unusable descriptions</h2>
+    <p>The case document handed to teams described a familiar failure mode: a business has a real task it would hand to students, but writes it down as a vague paragraph — missing the context, the data available, the constraints, and what "done" even looks like. Student teams can't propose against that. Most of these tasks just die in someone's inbox.</p>
+    <p>The constraint that shaped everything downstream: whatever we built had to turn a messy, incomplete problem statement into something a team could actually commit to — without inventing information that wasn't there.</p>
+  </section>
+
+  <section id="build">
+    <div class="kicker">02 — What We Built</div>
+    <h2>A task constructor, not a matchmaker</h2>
+    <p>We deliberately did not build an auto-matching system. A business writes a task in free text; an AI step reads it, flags what's missing, and asks at least three clarifying questions before anything gets published. The business edits and manually confirms the final card. Nothing goes live without a human saying yes.</p>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="n">01</div>
+        <h3>Task constructor</h3>
+        <p>Free-text input → completeness check → clarifying questions → editable, human-confirmed card.</p>
+      </div>
+      <div class="feature">
+        <div class="n">02</div>
+        <h3>Readiness score (0–100)</h3>
+        <p>A transparent breakdown of what's filled vs. missing, recalculated after every confirmed edit.</p>
+      </div>
+      <div class="feature">
+        <div class="n">03</div>
+        <h3>Open catalog</h3>
+        <p>Every published task is visible to every team — sortable by readiness, filterable by topic.</p>
+      </div>
+      <div class="feature">
+        <div class="n">04</div>
+        <h3>Manual decisions</h3>
+        <p>Teams submit idea + plan + deadline + prototype link. The business accepts, rejects, or picks several — by hand.</p>
+      </div>
+    </div>
+
+    <div class="rating-figure">
+      <div class="mono" style="font-size:12px; color:var(--muted-2); letter-spacing:.04em;">READINESS SCORE — EXAMPLE CARD</div>
+      <div class="rating-bar"><div class="rating-fill" id="ratingFill"></div></div>
+      <div class="rating-labels"><span>draft</span><span>needs detail</span><span>ready</span><span>priority</span></div>
+      <p class="rating-note">Points are only awarded for information that's filled in <em>and</em> confirmed by the business — a half-written field scores zero, not partial credit, by design.</p>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="kicker">03 — Stack &amp; Constraints</div>
+    <h2>Built to ship, not to impress</h2>
+    <p>With a hard deadline, most of the interesting engineering decisions were about what <em>not</em> to build:</p>
+
+    <div class="stack-row">
+      <span class="chip">Next.js 16 (App Router)</span>
+      <span class="chip">React 19 + TypeScript</span>
+      <span class="chip">Tailwind CSS 4</span>
+      <span class="chip">SQLite + Drizzle ORM</span>
+      <span class="chip">OpenAI Responses API</span>
+      <span class="chip">Zod validation</span>
+      <span class="chip">Docker</span>
+    </div>
+
+    <ul class="constraint-list">
+      <li><span class="ic">→</span><span><strong>No hallucinated facts.</strong> The AI step can ask questions and flag gaps — it's never allowed to invent details about a business's task.</span></li>
+      <li><span class="ic">→</span><span><strong>Graceful without a key.</strong> If <span class="mono">OPENAI_API_KEY</span> isn't set, a local fallback keeps the whole flow — including the AI step — demoable offline.</span></li>
+      <li><span class="ic">→</span><span><strong>No auto-matching.</strong> Scoring ranks readiness, not fit. Who works with whom stays a human call, every time.</span></li>
+      <li><span class="ic">→</span><span><strong>Scoped hard.</strong> No chat, no notifications, no file storage, no vector database, no mobile layout. Out of scope from the first minute, not cut under pressure in hour four.</span></li>
+      <li><span class="ic">→</span><span><strong>Security still mattered.</strong> Passwords hashed with <span class="mono">scrypt</span>, sessions server-side, cookies <span class="mono">HttpOnly</span> + <span class="mono">SameSite=Lax</span> — baseline hygiene, even on a five-hour build.</span></li>
+    </ul>
+  </section>
+
+  <section id="reflection">
+    <div class="kicker">04 — What Stuck With Me</div>
+    <h2>The jump from a six-page PDF to one buildable sentence</h2>
+    <p>The hardest part wasn't the integration work — it was the hour before any code existed, turning a multi-page case document into a single sentence we could actually build against: <em>businesses describe tasks badly; make the readiness of a task visible and let humans decide everything that matters.</em> Everything in the stack above follows from holding that sentence steady under time pressure, instead of chasing every feature the case document gestured at.</p>
+    <p class="pull">Scoping under a deadline isn't the boring part before the real engineering starts. It <em>is</em> the engineering — the rest is just typing.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Kuanysh Sarkytbayev · Astana, Kazakhstan</div>
+</footer>
+
+<script>
+  var fill = document.getElementById('ratingFill');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ fill.style.width = '72%'; io.unobserve(fill); }
+    });
+  }, { threshold:.5 });
+  io.observe(fill);
+</script>
+
+</body>
+</html>

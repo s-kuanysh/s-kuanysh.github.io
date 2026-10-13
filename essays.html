@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing — Kuanysh Sarkytbayev</title>
+<meta name="description" content="Notes and essays by Kuanysh Sarkytbayev.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1226;
+    --bg-panel:#161c3a;
+    --bg-panel-2:#1d2550;
+    --line: rgba(244,241,232,0.10);
+    --ink:#f4f1e8;
+    --muted:#9aa3c7;
+    --muted-2:#6f79a3;
+    --a:#34d399;
+    --t:#fb7185;
+    --g:#fbbf24;
+    --c:#60a5fa;
+    --maxw: 780px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--g); color:#12172b; }
+  a{ color:inherit; }
+  h1,h2{ font-family:'Fraunces', serif; font-weight:600; margin:0; letter-spacing:-0.01em; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,18,38,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .nav-path{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    color:var(--muted-2); text-decoration:none;
+  }
+  .nav-path .seg{ color:var(--a); }
+  .nav-back{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    color:var(--muted); text-decoration:none;
+  }
+  .nav-back:hover{ color:var(--ink); }
+
+  .hero{ padding:64px 0 30px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    color:var(--c);
+    background:rgba(96,165,250,0.08);
+    border:1px solid rgba(96,165,250,0.25);
+    padding:5px 10px; border-radius:999px; margin-bottom:22px;
+  }
+  .hero h1{ font-size:clamp(2rem, 5vw, 2.8rem); line-height:1.08; }
+  .hero p{ margin-top:16px; max-width:56ch; color:var(--muted); font-size:1.02rem; }
+
+  .list{ padding:20px 0 90px; display:flex; flex-direction:column; gap:16px; }
+  .entry{
+    display:block;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:26px 26px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:transform .18s ease, border-color .18s ease, background .18s ease;
+    position:relative;
+  }
+  .entry:hover{ transform:translateY(-2px); border-color:var(--g); background:var(--bg-panel-2); }
+  .entry .meta{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    letter-spacing:.08em; text-transform:uppercase;
+    color:var(--g); margin-bottom:10px;
+    display:flex; gap:10px; align-items:center;
+  }
+  .entry h2{ font-size:1.4rem; margin-bottom:8px; }
+  .entry p{ color:var(--muted); font-size:.98rem; margin:0; }
+  .entry .go{
+    margin-top:16px; font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; color:var(--g);
+  }
+
+  .entry.placeholder{
+    opacity:.5; cursor:default;
+  }
+  .entry.placeholder:hover{ transform:none; border-color:var(--line); background:var(--bg-panel); }
+
+  footer{
+    padding:36px 0 60px; text-align:center; color:var(--muted-2);
+    font-family:'IBM Plex Mono', monospace; font-size:12px;
+  }
+  footer a{ color:var(--muted); text-decoration:none; }
+  footer a:hover{ color:var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-path">~/<span class="seg">kuanysh_sarkytbayev</span>/writing</a>
+    <a href="index.html" class="nav-back">← hub</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">&gt; ls ./writing</div>
+    <h1>Notes &amp; Essays</h1>
+    <p>Things I write outside the lab — mostly about the ideas, history, and people that shape how I think about doing science. Not peer-reviewed, just honest.</p>
+  </header>
+
+  <section class="list">
+    <a class="entry" href="faria.html">
+      <div class="meta">History · Reflection</div>
+      <h2>The Workshop of Abbé Faria</h2>
+      <p>A catalog of everything a fictional prisoner in <em>The Count of Monte Cristo</em> built with nothing but time — and why it's the part of the novel that stays with me as a scientist.</p>
+      <div class="go">Read →</div>
+    </a>
+
+    <a class="entry" href="polygon.html">
+      <div class="meta" style="color:var(--t);">History · Facts</div>
+      <h2>The Polygon</h2>
+      <p>456 nuclear tests. A city with no name on any map. A secret clinic that never told patients their diagnosis. What actually happened 150 km from Semey — and the biology behind why it mattered.</p>
+      <div class="go" style="color:var(--t);">Read →</div>
+    </a>
+
+    <div class="entry placeholder">
+      <div class="meta">Coming soon</div>
+      <h2>More notes on the way</h2>
+      <p>This list will grow as I write more.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>Kuanysh Sarkytbayev · Astana, Kazakhstan</div>
+  </div>
+</footer>
+
+</body>
+</html>

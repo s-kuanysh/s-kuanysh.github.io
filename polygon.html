@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Polygon — Kuanysh Sarkytbayev</title>
+<meta name="description" content="One nuclear test every 32 days, for 40 years. What actually happened at the Semipalatinsk Test Site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#08080a;
+    --ash:#141317;
+    --ash-2:#1c1a1f;
+    --line: rgba(230,224,204,0.10);
+    --bone:#ece5d4;
+    --dust:#a89fa0;
+    --dust-2:#6e6870;
+    --amber:#e0a53f;
+    --amber-dim:#8a641f;
+    --teal:#5fb3a0;
+    --rust:#b85a45;
+    --maxw:720px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--bone);
+    font-family:'EB Garamond', serif;
+    font-size:19.5px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--amber); color:#181509; }
+  a{ color:var(--teal); }
+  h1,h2{ font-family:'Fraunces', serif; font-weight:700; margin:0; letter-spacing:-0.01em; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  .full{ width:100%; }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    opacity:.06; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(8,8,10,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .nav-path{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--dust-2); text-decoration:none; }
+  .nav-path .seg{ color:var(--amber); }
+  .nav-back{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--dust); text-decoration:none; }
+
+  main{ position:relative; z-index:1; }
+
+  /* ================= OPENING — ANIMATED CLOUD ================= */
+  .opening{
+    position:relative;
+    height:78vh; min-height:440px; max-height:760px;
+    overflow:hidden;
+    background:#000;
+  }
+  .opening svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .cloud-bloom{
+    transform-origin:600px 260px;
+    animation: bloom 2.6s cubic-bezier(.16,.9,.35,1) forwards;
+  }
+  @keyframes bloom{
+    0%{ transform:scale(.25) translateY(60px); opacity:0; }
+    55%{ opacity:1; }
+    100%{ transform:scale(1) translateY(0); opacity:.95; }
+  }
+  .flash-pulse{ animation: flashpulse 5s ease-in-out infinite; animation-delay:2.6s; }
+  @keyframes flashpulse{
+    0%,100%{ opacity:.5; } 50%{ opacity:.85; }
+  }
+  .grain-layer{
+    position:absolute; inset:0; opacity:.15; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .opening .vg{
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 40%, transparent 35%, rgba(0,0,0,.75) 100%);
+  }
+  .opening-content{
+    position:absolute; inset:0; z-index:5;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    text-align:center; padding-bottom:56px;
+    animation: fadein 1.4s ease forwards; animation-delay:.3s; opacity:0;
+  }
+  @keyframes fadein{ to{ opacity:1; } }
+  .opening-content .k1{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.34em;
+    text-transform:uppercase; color:var(--dust); margin-bottom:14px;
+  }
+  .opening-content h1{
+    font-size:clamp(2.3rem, 8vw, 4.4rem);
+    color:var(--bone);
+    line-height:.98;
+    text-shadow:0 6px 40px rgba(0,0,0,.7);
+  }
+  .opening-content .k2{
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--amber);
+    letter-spacing:.04em;
+  }
+  .scrolldown{
+    position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6;
+    color:var(--dust-2); animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{ transform:translate(-50%,0);} 50%{ transform:translate(-50%,6px);} }
+
+  /* ================= HERO HOOK ================= */
+  .hook{ padding:60px 0 20px; text-align:center; }
+  .hook .lede{ color:var(--dust); font-size:1.05rem; max-width:56ch; margin:20px auto 0; }
+  .hook-stat{
+    display:flex; align-items:baseline; justify-content:center; gap:16px; flex-wrap:wrap;
+  }
+  .hook-stat .n{
+    font-family:'Fraunces', serif; font-weight:900; font-size:clamp(3.4rem, 16vw, 7rem);
+    color:var(--amber); line-height:.9; letter-spacing:-.02em;
+  }
+  .hook-stat .u{
+    font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--dust);
+    text-align:left; max-width:16ch; line-height:1.5;
+  }
+
+  /* ================= SECTIONS ================= */
+  section{
+    padding:64px 0; border-top:1px solid var(--line);
+    opacity:0; transform:translateY(22px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  section.in{ opacity:1; transform:translateY(0); }
+  .kicker{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--amber); margin-bottom:14px;
+  }
+  section h2{ font-size:clamp(1.5rem, 4.4vw, 2.1rem); margin-bottom:18px; max-width:20ch; line-height:1.12; }
+  section p{ margin:0 0 18px; color:var(--bone); }
+  section p.small{ color:var(--dust); font-size:.94rem; }
+  em{ color:var(--dust); font-style:italic; }
+
+  /* ---- radar ping (closed city) ---- */
+  .radar-wrap{ position:relative; width:100%; max-width:340px; margin:26px auto 10px; aspect-ratio:1/1; }
+  .radar-wrap svg{ width:100%; height:100%; }
+  .ping{ transform-origin:170px 170px; animation:pingring 2.8s ease-out infinite; }
+  .ping.d2{ animation-delay:.9s; }
+  .ping.d3{ animation-delay:1.8s; }
+  @keyframes pingring{
+    0%{ transform:scale(.15); opacity:.9; }
+    100%{ transform:scale(1); opacity:0; }
+  }
+  .sweep{ transform-origin:170px 170px; animation:sweep 3.2s linear infinite; }
+  @keyframes sweep{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+
+  /* ---- fallout drift ---- */
+  .drift-wrap{ position:relative; width:100%; margin:26px 0 10px; }
+  .drift-wrap svg{ width:100%; height:auto; display:block; }
+  .particle{ animation:drift 6s linear infinite; opacity:0; }
+  @keyframes drift{
+    0%{ opacity:0; transform:translate(0,0); }
+    8%{ opacity:.9; }
+    85%{ opacity:.6; }
+    100%{ opacity:0; transform:translate(260px,70px); }
+  }
+
+  /* ---- stat cards ---- */
+  .stat-row{ display:flex; gap:14px; margin-top:18px; flex-wrap:wrap; }
+  .stat{
+    flex:1 1 140px; background:var(--ash-2); border:1px solid var(--line); border-radius:10px;
+    padding:16px 16px;
+  }
+  .stat .num{ font-family:'Fraunces', serif; font-weight:800; font-size:1.9rem; color:var(--teal); line-height:1; }
+  .stat .lab{ margin-top:8px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--dust); letter-spacing:.02em; }
+
+  .stamp-block{ position:relative; background:var(--ash); border:1px solid var(--line); border-radius:10px; padding:22px; margin:20px 0; }
+  .stamp{
+    position:absolute; top:14px; right:16px;
+    font-family:'IBM Plex Mono', monospace; font-size:10px; font-weight:600; letter-spacing:.1em;
+    color:var(--rust); border:2px solid var(--rust); padding:4px 7px; border-radius:3px;
+    transform:rotate(6deg); opacity:.85;
+  }
+
+  /* ---- test density strip ---- */
+  .density-wrap{ margin:28px 0 6px; }
+  .density-legend{
+    display:flex; gap:18px; margin-bottom:12px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--dust);
+  }
+  .density-legend .sw{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .density-strip{
+    position:relative; display:flex; align-items:flex-end; gap:1px;
+    height:64px; border-bottom:1px solid var(--line); padding-bottom:2px;
+  }
+  .tick{
+    flex:1 1 0; min-width:1.5px; border-radius:1px 1px 0 0;
+    transform:scaleY(0); transform-origin:bottom;
+    opacity:0;
+  }
+  .tick.atmo{ background:var(--amber); height:60%; }
+  .tick.under{ background:var(--teal); height:100%; }
+  .density-strip.play .tick{ animation:tickup .5s ease forwards; }
+  @keyframes tickup{ to{ transform:scaleY(1); opacity:.85; } }
+  .density-years{
+    display:flex; justify-content:space-between; margin-top:6px;
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--dust-2);
+  }
+
+  /* ---- clinic scan ---- */
+  .scan-wrap{ position:relative; margin:24px 0; background:var(--ash); border:1px solid var(--line); border-radius:10px; padding:20px 20px 18px; overflow:hidden; }
+  .scan-doc{ display:flex; flex-direction:column; gap:9px; }
+  .scan-doc .ln{ height:8px; border-radius:2px; background:var(--ash-2); }
+  .scan-wrap::after{
+    content:""; position:absolute; top:0; bottom:0; width:70px;
+    background:linear-gradient(90deg, transparent, rgba(224,165,63,.16), transparent);
+    animation:scanmove 3.4s ease-in-out infinite;
+  }
+  @keyframes scanmove{ 0%{ left:-80px; } 100%{ left:100%; } }
+
+  /* ---- DNA break ---- */
+  .figure{ margin:24px 0; background:var(--ash); border:1px solid var(--line); border-radius:12px; padding:22px 18px 16px; }
+  .figure svg{ width:100%; height:auto; display:block; }
+  .figure .cap{ margin-top:12px; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--dust-2); text-align:center; }
+  .strand-top{ animation:strandsep-t 2.4s ease-in-out infinite; }
+  .strand-bot{ animation:strandsep-b 2.4s ease-in-out infinite; }
+  @keyframes strandsep-t{ 0%,60%,100%{ transform:translateY(0); } 30%{ transform:translateY(-6px); } }
+  @keyframes strandsep-b{ 0%,60%,100%{ transform:translateY(0); } 30%{ transform:translateY(6px); } }
+  .zap{ animation:zapflash 2.4s ease-in-out infinite; }
+  @keyframes zapflash{ 0%,25%,100%{ opacity:0; } 28%,45%{ opacity:1; } }
+
+  .pull{
+    margin:30px 0; padding-left:20px; border-left:2px solid var(--teal);
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size:1.12rem;
+    color:var(--teal); line-height:1.5;
+  }
+
+  .sources{ margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--dust-2); line-height:1.9; }
+  .sources a{ color:var(--dust); }
+
+  footer{ padding:44px 0 60px; text-align:center; color:var(--dust-2); font-family:'IBM Plex Mono', monospace; font-size:12px; position:relative; z-index:1; }
+
+  @media (max-width:560px){ body{ font-size:18px; } }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="opening">
+  <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0d0c10"/>
+        <stop offset=".5" stop-color="#1a1719"/>
+        <stop offset="1" stop-color="#2c2519"/>
+      </linearGradient>
+      <radialGradient id="flash" cx="50%" cy="38%" r="50%">
+        <stop offset="0" stop-color="#e0a53f" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#e0a53f" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#332c1f"/>
+        <stop offset="1" stop-color="#121013"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="640" fill="url(#sky)"/>
+    <rect class="flash-pulse" width="1200" height="640" fill="url(#flash)"/>
+    <g class="cloud-bloom" fill="#0b0a0d">
+      <ellipse cx="600" cy="230" rx="190" ry="120"/>
+      <ellipse cx="490" cy="175" rx="88" ry="62"/>
+      <ellipse cx="710" cy="188" rx="92" ry="64"/>
+      <ellipse cx="600" cy="140" rx="70" ry="55"/>
+      <path d="M535 305 Q560 420 505 540 L695 540 Q640 420 665 305 Z"/>
+    </g>
+    <path d="M0 520 Q300 500 600 520 T1200 514 L1200 640 L0 640 Z" fill="url(#ground)"/>
+    <g stroke="#453e2e" stroke-width="2.4" opacity=".8">
+      <line x1="890" y1="520" x2="905" y2="430"/>
+      <line x1="946" y1="520" x2="931" y2="430"/>
+      <line x1="905" y1="430" x2="931" y2="430"/>
+      <line x1="898" y1="470" x2="938" y2="470"/>
+    </g>
+  </svg>
+  <div class="grain-layer"></div>
+  <div class="vg"></div>
+  <div class="opening-content">
+    <div class="k1">EAST KAZAKHSTAN</div>
+    <h1>THE&nbsp;POLYGON</h1>
+    <div class="k2">1949 — 1991</div>
+  </div>
+  <div class="scrolldown">
+    <svg width="16" height="22" viewBox="0 0 16 22" fill="none"><path d="M8 1v16M2 12l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-path">~/<span class="seg">kuanysh_sarkytbayev</span>/writing</a>
+    <a href="essays.html" class="nav-back">← writing</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <div class="hook">
+    <div class="hook-stat">
+      <div class="n" id="cadence">32</div>
+      <div class="u">days — the average gap between nuclear tests here, for forty straight years.</div>
+    </div>
+    <p class="lede">150 km from Semey, Kazakhstan. 456 detonations. A city with no name on any map. Here's what's actually on the record.</p>
+  </div>
+
+  <section id="place">
+    <div class="kicker">01 — The City</div>
+    <h2>It didn't officially exist</h2>
+    <p>The Soviet administrative center for the test site had no public name for over four decades — just a postal code, Semipalatinsk-21. Visitors were routed through Moscow and cleared at checkpoints; getting in could take months. At its peak it held roughly 40,000 people who, on paper, lived nowhere at all.</p>
+
+    <div class="radar-wrap">
+      <svg viewBox="0 0 340 340">
+        <circle cx="170" cy="170" r="140" fill="none" stroke="#2a2730" stroke-width="1"/>
+        <circle cx="170" cy="170" r="95" fill="none" stroke="#2a2730" stroke-width="1"/>
+        <circle cx="170" cy="170" r="50" fill="none" stroke="#2a2730" stroke-width="1"/>
+        <circle class="ping" cx="170" cy="170" r="10" fill="none" stroke="#e0a53f" stroke-width="2"/>
+        <circle class="ping d2" cx="170" cy="170" r="10" fill="none" stroke="#e0a53f" stroke-width="2"/>
+        <circle class="ping d3" cx="170" cy="170" r="10" fill="none" stroke="#e0a53f" stroke-width="2"/>
+        <g class="sweep">
+          <path d="M170 170 L170 30 A140 140 0 0 1 260 65 Z" fill="#e0a53f" opacity=".08"/>
+        </g>
+        <circle cx="170" cy="170" r="4.5" fill="#e0a53f"/>
+        <text x="170" y="196" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#a89fa0" letter-spacing="1.5">NO NAME · NO MAP</text>
+      </svg>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">40k</div><div class="lab">RESIDENTS AT PEAK, OFFICIALLY UNLOCATED</div></div>
+      <div class="stat"><div class="num">4+</div><div class="lab">CODE NAMES OVER THE YEARS — INCLUDING "MOSCOW-400"</div></div>
+      <div class="stat"><div class="num">42yr</div><div class="lab">BEFORE IT APPEARED ON A PUBLIC MAP</div></div>
+    </div>
+  </section>
+
+  <section id="flash">
+    <div class="kicker">02 — The First Bomb</div>
+    <h2>The wind was already known</h2>
+    <p>On 29 August 1949, the USSR detonated its first atomic bomb here, codenamed <em>First Lightning</em>. Soviet meteorologists knew rain and wind that morning would carry fallout directly over inhabited villages. The test proceeded on schedule anyway.</p>
+
+    <div class="drift-wrap">
+      <svg viewBox="0 0 600 160">
+        <g fill="#0e0c10"><ellipse cx="80" cy="55" rx="55" ry="34"/><ellipse cx="55" cy="42" rx="26" ry="18"/><ellipse cx="105" cy="44" rx="28" ry="19"/></g>
+        <g fill="#e0a53f">
+          <circle class="particle" cx="0" cy="0" r="3" style="animation-delay:0s" transform="translate(90,60)"/>
+          <circle class="particle" cx="0" cy="0" r="2.4" style="animation-delay:.9s" transform="translate(95,50)"/>
+          <circle class="particle" cx="0" cy="0" r="2.8" style="animation-delay:1.8s" transform="translate(85,66)"/>
+          <circle class="particle" cx="0" cy="0" r="2" style="animation-delay:2.7s" transform="translate(100,55)"/>
+          <circle class="particle" cx="0" cy="0" r="3.2" style="animation-delay:3.6s" transform="translate(88,45)"/>
+          <circle class="particle" cx="0" cy="0" r="2.2" style="animation-delay:4.5s" transform="translate(92,62)"/>
+        </g>
+        <path d="M0 130 Q150 118 300 128 T600 122" fill="none" stroke="#332c1f" stroke-width="18" opacity=".6"/>
+        <g fill="#a89fa0" opacity=".85">
+          <rect x="380" y="112" width="10" height="12"/><rect x="400" y="108" width="10" height="16"/>
+          <rect x="420" y="114" width="10" height="10"/>
+          <rect x="480" y="108" width="10" height="16"/><rect x="500" y="112" width="10" height="12"/>
+        </g>
+        <text x="440" y="150" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="#6e6870" letter-spacing="1">VILLAGES, DOWNWIND</text>
+      </svg>
+    </div>
+
+    <div class="stamp-block">
+      <div class="stamp">NEVER TOLD WHY</div>
+      <p style="margin-bottom:0;">In one village caught under that first cloud, roughly 90% of residents absorbed up to <strong>1,400 millisieverts</strong> in the following year — nearly 500× a typical annual background dose. No evacuation. No explanation.</p>
+    </div>
+  </section>
+
+  <section id="density">
+    <div class="kicker">03 — Forty Years, By The Number</div>
+    <h2>Every one of the 456</h2>
+    <p>Not a slow trickle — a near-constant rhythm. Each bar below is one real detonation, placed roughly where it fell in the timeline.</p>
+
+    <div class="density-wrap">
+      <div class="density-legend">
+        <span><span class="sw" style="background:var(--amber);"></span>atmospheric (116)</span>
+        <span><span class="sw" style="background:var(--teal);"></span>underground (340)</span>
+      </div>
+      <div class="density-strip" id="densityStrip"></div>
+      <div class="density-years"><span>1949</span><span>1963 — treaty forces tests underground</span><span>1989</span></div>
+    </div>
+  </section>
+
+  <section id="clinic">
+    <div class="kicker">04 — The Clinic</div>
+    <h2>Disguised as a livestock disease ward</h2>
+    <p>In 1957 the Soviet Ministry of Health quietly opened a facility near the site named <strong>"Anti-Brucellosis Dispensary No. 4"</strong> — officially for a cattle disease. Its real job was tracking radiation effects across roughly 100,000 exposed residents. Patients were examined for decades. They were never told their actual diagnosis. The findings went straight to Moscow.</p>
+
+    <div class="scan-wrap">
+      <div class="scan-doc">
+        <div class="ln" style="width:70%;"></div>
+        <div class="ln" style="width:92%;"></div>
+        <div class="ln" style="width:55%;"></div>
+        <div class="ln" style="width:80%;"></div>
+        <div class="ln" style="width:40%;"></div>
+        <div class="ln" style="width:88%;"></div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">×3</div><div class="lab">RISE IN INFANT MORTALITY BY 1960</div></div>
+      <div class="stat"><div class="num">+33%</div><div class="lab">HIGHER MALIGNANT TUMOR RATE IN CONTAMINATED AREAS</div></div>
+      <div class="stat"><div class="num">~1.5M</div><div class="lab">PEOPLE ESTIMATED EXPOSED, REGION-WIDE</div></div>
+    </div>
+  </section>
+
+  <section id="biology">
+    <div class="kicker">05 — The Mechanism</div>
+    <h2>What radiation does, in plain terms</h2>
+    <p>None of the above is speculative — it follows from mechanisms that are extremely well established. Ionizing radiation carries enough energy to strip electrons as it passes through tissue, producing breaks in the DNA double helix — sometimes both strands at once, the hardest kind of damage for a cell to fix cleanly.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 600 170">
+        <g class="strand-top" stroke="#5fb3a0" stroke-width="2.2" fill="none">
+          <path d="M40 45 Q120 15 200 45 Q260 65 300 55"/>
+        </g>
+        <g class="strand-bot" stroke="#5fb3a0" stroke-width="2.2" fill="none">
+          <path d="M40 65 Q120 95 200 65 Q260 45 300 55" transform="translate(0,-2)"/>
+        </g>
+        <g class="zap" stroke="#e0a53f" stroke-width="2.4" stroke-linecap="round">
+          <line x1="330" y1="10" x2="300" y2="55"/>
+          <line x1="300" y1="55" x2="325" y2="55"/>
+          <line x1="325" y1="55" x2="295" y2="100"/>
+        </g>
+        <g stroke="#b85a45" stroke-width="2.6" stroke-linecap="round">
+          <path class="strand-top" d="M320 48 L345 40"/>
+          <path class="strand-bot" d="M320 65 L345 73"/>
+        </g>
+        <text x="420" y="45" font-family="IBM Plex Mono, monospace" font-size="11" fill="#b85a45">DOUBLE-STRAND</text>
+        <text x="420" y="60" font-family="IBM Plex Mono, monospace" font-size="11" fill="#b85a45">BREAK</text>
+      </svg>
+      <div class="cap">A double-strand break — the hardest DNA damage for a cell to repair without error.</div>
+    </div>
+
+    <p>Most breaks get repaired correctly. But repair isn't perfect: a small fraction get stitched back together with an error — a mutation. Most mutations do nothing. Some land in a gene that controls when a cell divides or dies. Enough of the wrong mutations in the wrong genes is the accepted mechanism behind how a normal cell becomes a cancer cell — usually only after years to decades of further damage accumulating on top.</p>
+
+    <p>This is why the World Health Organization's cancer agency classifies ionizing radiation as a <strong>Group 1 carcinogen</strong> — its highest-certainty category, alongside tobacco smoke and asbestos, reserved for causes with conclusive human evidence.</p>
+
+    <p class="pull">A mutation is just a copying mistake that survived. Cancer is what happens when enough mistakes land in the wrong place. The Polygon is one of the clearest, most tragic illustrations of that mechanism at population scale.</p>
+  </section>
+
+  <section id="sources">
+    <div class="kicker">Sources</div>
+    <div class="sources">
+      <div>Bulletin of the Atomic Scientists — "The lasting toll of Semipalatinsk's nuclear testing" (2009). <a href="https://thebulletin.org/2009/09/the-lasting-toll-of-semipalatinsks-nuclear-testing/" target="_blank" rel="noopener">thebulletin.org</a></div>
+      <div>Nuclear Threat Initiative — Semipalatinsk Test Site overview. <a href="https://www.nti.org/education-center/facilities/semipalatinsk-test-site/" target="_blank" rel="noopener">nti.org</a></div>
+      <div>Fairewinds — "The Nuclear Sins of the Soviet Union Live on in Kazakhstan." <a href="https://www.fairewinds.org/nuclear-energy-education/the-nuclear-sins-of-the-soviet-union-live-on-in-kazakhstan" target="_blank" rel="noopener">fairewinds.org</a></div>
+      <div>Wikipedia — Semipalatinsk Test Site; Kurchatov, Kazakhstan.</div>
+      <div>IARC (WHO) — Monograph on ionizing radiation, Group 1 classification.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Kuanysh Sarkytbayev · Semey / Astana, Kazakhstan</footer>
+
+<script>
+  // scroll-reveal for sections
+  const sections = document.querySelectorAll('section');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:.12 });
+  sections.forEach(s=>io.observe(s));
+
+  // animated cadence counter (days between tests)
+  (function(){
+    const el = document.getElementById('cadence');
+    let v = 0; const target = 32;
+    const t = setInterval(()=>{
+      v++; el.textContent = v;
+      if(v >= target) clearInterval(t);
+    }, 45);
+  })();
+
+  // build the 456-test density strip: 1949-1989, atmospheric vs underground
+  (function(){
+    const strip = document.getElementById('densityStrip');
+    const total = 456, atmo = 116;
+    // interleave: atmospheric mostly 1949-1962, underground 1963-1989, roughly proportional
+    for(let i=0;i<total;i++){
+      const tick = document.createElement('div');
+      const isAtmo = i < atmo;
+      tick.className = 'tick ' + (isAtmo ? 'atmo' : 'under');
+      tick.style.animationDelay = (i * 1.6) + 'ms';
+      strip.appendChild(tick);
+    }
+    const stripIo = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ strip.classList.add('play'); stripIo.unobserve(strip); }
+      });
+    }, { threshold:.4 });
+    stripIo.observe(strip);
+  })();
+</script>
+
+</body>
+</html>
